@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+
+<link rel="stylesheet" type="text/css"
+	href="../dependencies/js/kendo.common.min.css">
+<link rel="stylesheet" type="text/css"
+	href="../dependencies/js/kendo.default.min.css">
+<script type="text/javascript" src="../dependencies/js/jquery-1.8.3.js"></script>
+<script type="text/javascript" src="../dependencies/js/kendo.all.min.js"></script>
+<script type="text/javascript" src="../dependencies/js/createChart.js"></script>
+<script type="text/javascript"
+	src="../dependencies/js/downloadToExcel.js"></script>
+
+<title th:text="${moduleName + ' Detailed Reports'}">Title</title>
+
+<style>
+.myStyle1 {
+	color: #E0E0E0;
+	font-family: Arial;
+	font-size: 13px;
+	width: 150px;
+	align: left;
+	background-color: #153E7E;
+}
+
+.myStyle2 {
+	color: #153E7E;
+	font-family: Arial;
+	font-size: 13px;
+	width: 150px;
+	align: left;
+}
+</style>
+
+</head>
+<body id="body" th:with="dateFormat='dd/MMM/yyyy HH:mm:ss'">
+	<h4>
+		<a th:href="@{{moduleName}.log(moduleName=${moduleName})}"
+			 TARGET="_blank"
+			title="log file" th:text="${moduleName + ' -- Detailed Report :'}">Header</a>
+	</h4>
+
+	<table border=1 cellspacing=1 cellpadding=1>
+		<tr>
+			<td class="myStyle1"><span>StartTime</span></td>
+			<td class="myStyle2"><span th:text="${#dates.format(startTime, dateFormat)}">Start Time</span></td>
+		</tr>
+		<tr>
+			<td class="myStyle1"><span>EndTime</span></td>
+			<td class="myStyle2"><span th:text="${#dates.format(endTime, dateFormat)}">End Time</span></td>
+		</tr>
+		<tr>
+			<td class="myStyle1"><span>Browser</span></td>
+			<td class="myStyle2"><span th:text="${browser}">Browser</span></td>
+		</tr>
+		<tr>
+			<td class="myStyle1"><span>Total</span></td>
+			<td class="myStyle2"><span th:text="${totalCount}">Total Count</span></td>
+		</tr>
+		<tr>
+			<td class="myStyle1"><span>Pass</span></td>
+			<td class="myStyle2"><span th:text="${passCount}">Pass Count</span></td>
+		</tr>
+		<tr>
+			<td class="myStyle1"><span>Fail</span></td>
+			<td class="myStyle2"><span th:text="${failCount}">Fail Count</span></td>
+		</tr>
+		<tr>
+			<td class="myStyle1"><span>Duration</span></td>
+			<td class="myStyle2"><span th:text="${duration}">Duration</span></td>
+		</tr>
+	</table>
+
+	<br />
+	<br />
+
+
+
+	<p align="right">
+		<a id="dlink" style="display: none;"></a> <input type="button"
+			onclick="tableToExcel('body', 'abc')" value="Export to Excel">
+	</p>
+
+	<table border=1 cellspacing=1 cellpadding=1 width=100%>
+		<tr>
+			<th><span>Automation TC ID</span></th>
+			<th><span>Test Case Name</span></th>
+			<th><span>Manual TC ID</span></th>
+			<th><span>Status</span></th>
+			<th><span>Run Start Time</span></th>
+			<th><span>Run End Time</span></th>
+		</tr>
+		<tr th:each="testCase  : ${testCaseList}">
+			<td><span th:text="${testCase.sequenceCount}">sequence</span></td>
+			<td>
+				<a th:if="${testCase.runMode}" th:href="@{{tcid}/{iterCount}/{tcid}.html(tcid=${testCase.testCaseId}, iterCount=${testCase.iterationCount})}" th:target="_blank">
+					<span th:text="${testCase.testCaseDescription}">description</span>
+				</a>
+				<span th:if="${not testCase.runMode}" th:text="${testCase.testCaseDescription}">description</span>
+			</td>
+			<td><span th:text="${testCase.manualTestCaseId}">Manual TC Id</span></td>
+			<td>
+				<span th:if="${not testCase.runMode}" th:text="'Skip'">Result</span>
+				<span th:if="${testCase.runMode}" th:text="${testCase.status}?'Pass' : 'Fail'">Result</span>
+			</td>
+			<td><span th:text="${#dates.format(testCase.startTime, dateFormat)}">Start Time</span></td>
+			<td><span th:text="${#dates.format(testCase.endTime, dateFormat)}">End Time</span></td>
+		</tr>
+	</table>
+</body>
+</html>

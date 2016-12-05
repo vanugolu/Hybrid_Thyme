@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset='utf-8'>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="Content-Language" content="en">
+
+<link rel="stylesheet" type="text/css"
+	href="../dependencies/js/kendo.common.min.css">
+<link rel="stylesheet" type="text/css"
+	href="../dependencies/js/kendo.default.min.css">
+<script type="text/javascript" src="../dependencies/js/jquery-1.8.3.js"></script>
+<script type="text/javascript" src="../dependencies/js/kendo.all.min.js"></script>
+<script type="text/javascript" src="../dependencies/js/createChart.js"></script>
+<script type="text/javascript"
+	src="../dependencies/js/downloadToExcel.js"></script>
+
+<title FONT COLOR=#E0E0E0>AUTOMATION TEST EXECUTION RESULTS</title>
+<style>
+#table1 {
+	width: 320px;
+	float: left;
+}
+
+#table2 {
+	width: 320px;
+	float: left;
+	margin-left: 100px;
+}
+
+tr.myStyle1 td {
+	color: #E0E0E0;
+	font-family: Arial;
+	font-size: 13px;
+	width: 150px;
+	text-align: center;
+	background-color: #153E7E;
+}
+
+tr.myStyle2 td {
+	color: black;
+	font-family: Arial;
+	font-size: 13px;
+	width: 150px;
+	text-align: center;
+	background-color: white;
+}
+
+td.myStyle2 {
+	color: #E0E0E0;
+	font-family: Arial;
+	font-size: 13px;
+	width: 150px;
+	text-align: center;
+	background-color: #153E7E;
+}
+</style>
+</head>
+<body bgcolor=white id="body" th:with="dateFormat='dd/MMM/yyyy HH:mm:ss'">
+	<div id="example" class="k-content">
+		<div class="chart-wrapper">
+			<div id="chart"></div>
+		</div>
+	</div>
+
+	<div>
+		<!-- <h2 align=center><FONT COLOR=black FACE=AriaL SIZE=3><span>AUTOMATION TEST EXECUTION RESULTS</span></h2> -->
+		<table align=center border=1 cellspacing=1 cellpadding=1 width=20%>
+			<tr class="myStyle1">
+				<td><span>AUTOMATION TEST EXECUTION RESULTS</span></td>
+			</tr>
+		</table>
+		<br>
+		<br>
+	</div>
+	
+	<div>
+		<table border=1 cellspacing=1 cellpadding=1 width=12.5%>
+			<tr class="myStyle1">
+				<td><span>SUITE DETAILS</span></td>
+			</tr>
+		</table>
+	
+		<table id="myTable" border=1 cellspacing=1 cellpadding=1 width=100%>
+			<!--<caption style="text-align:left"><FONT COLOR=maroon FACE=AriaL SIZE=2><span>SUITE DETAILS</span></caption>-->
+			<tr class="myStyle1">
+				<td><span>Run Start Time</span></td>
+				<td><span>Run End Time</span></td>
+				<td><span>Duration</span></td>
+				<td><span>Environment</span></td>
+				<td><span>Suite</span></td>
+				<td><span>Total</span></td>
+				<td><span>Pass</span></td>
+				<td><span>Fail</span></td>
+			</tr>
+	
+			<tr class="myStyle2">
+				<td><span th:text="${#dates.format(startTime, dateFormat)}"></span></td>
+				<td><span th:text="${#dates.format(endTime, dateFormat)}"></span></td>
+				<td><span th:text="${duration}"></span></td>
+				<td><a th:href="@{{appURL}(appURL=${appURL})}" TARGET="_blank"><span>APP URL</span></a></td>
+				<td><span th:text="${suiteName}"></span></td>
+				<td><span th:text="${totalCount}"></span></td>
+				<td><span th:text="${passCount}"></span></td>
+				<td><span th:text="${failCount}"></span></td>
+			</tr>
+		</table>
+	</div>
+
+	<div>
+		<input type="button" onclick="getCount()" value="View Pie Chart"
+			style="float: right;" />
+		<a id="dlink" style="display: none;"></a>
+		<input type="button"
+			onclick="tableToExcel('body', 'Automation Run Report','Automation_Run_Report.xls')"
+			value="Export to Excel" />
+	
+		<table border=1 cellspacing=1 cellpadding=1 width=20%>
+			<tr class="myStyle1">
+				<td><span>MODULES DETAILS</span></td>
+			</tr>
+		</table>
+	</div>
+
+	<div>
+		<table border=1 cellspacing=1 cellpadding=1 width=100%>
+			<!--<caption style="text-align:left"><FONT COLOR=maroon FACE=AriaL SIZE=2><span>MODULES  DETAILS</span></caption>-->
+			<tr class="myStyle1">
+				<th><span>MODULE NAME</span></th>
+				<th><span>browser</span></th>
+				<th><span>Total</span></th>
+				<th><span>Pass</span></th>
+				<th><span>Fail</span></th>
+				<th><span>Start Time</span></th>
+				<th><span>End Time</span></th>
+				<th><span>Duration</span></th>
+			</tr>
+	
+			<tr th:each="module  : ${moduleList}">
+				<td><span><a th:href="@{{module}/{browser}/{module}.html(module=${module.moduleName}, browser=${module.browserName})}"
+						TARGET="_blank" th:text="${module.moduleName}">module name</a></span></td>
+				<td><span th:text="${module.browserName}">browser</span></td>
+				<td><span th:text="${module.total}">Total</span></td>
+				<td><span th:text="${module.passCount}">Pass Count</span></td>
+				<td><span th:text="${module.failCount}">Fail Count</span></td>
+				<td><span th:text="${#dates.format(module.startTime, dateFormat)}">Start Time</span></td>
+				<td><span th:text="${#dates.format(module.endTime, dateFormat)}">End Time</span></td>
+				<td><span th:text="${duration}">Duration</span></td>
+			</tr>
+		</table>
+	</div>
+
+</body>
+</html>

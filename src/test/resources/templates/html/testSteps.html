@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+ <head>
+ <title th:text="${testCaseId + ' Detailed Reports'}">Title</title>
+ </head>
+ <body>
+ <h4 th:text="${testCaseId + ' -- Detailed Report :'}">Header</h4>
+ <table  border=1 cellspacing=1    cellpadding=1 width=100%>
+ 	<tr>
+		 <th><b>Step</b></th>
+		 <th><b>Description</b></th>
+		 <th><b>Keyword</b></th>
+		 <th><b>Result</b></th>
+		 <th><b>Screen Shot</b></th>
+ 	</tr>
+ 	<tr th:each="testStep  : ${stepList}">
+		 <td><span th:text="${testStep.testStepId}">Step Id</span></td>
+		 <td><span th:text="${testStep.testStepDescription}">Description</span></td>
+		 <td><span th:text="${testStep.keyword}">Keyword</span></td>
+		 <td>
+		 	<span th:if="${not testStep.runMode}" th:text="'Skip'">Result</span>
+			<span th:if="${testStep.runMode}" th:text="${testStep.status}?'Pass' : 'Fail'">Result</span>
+		 </td>
+		 <td><a th:if="${testStep.screenShotPath != null}" th:href="@{{stepId}.jpeg(stepId=${testStep.testStepId})}" target=_blank>Screen Shot</a></td>
+ 	</tr>
+</table>
+</body>
+</html>

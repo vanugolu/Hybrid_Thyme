@@ -1,0 +1,23 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="My Sample Suite">
+
+
+<test name="TestNGBasicAnnotations">
+    <classes>
+        <class name="seleniumTraining.TestNGBasicAnnotations" ></class>  
+    </classes>
+</test>
+
+<!-- <test name="TestNGDataProvider">
+    <classes>
+        <class name="seleniumTraining.TestNGDataProvider" ></class>  
+    </classes>
+</test> -->
+
+<!-- <test name="SuiteAnnotationsTest">
+    <classes>
+        <class name="seleniumTraining.SuiteAnnotationsTest" ></class>  
+    </classes>
+</test> -->
+
+</suite>

@@ -1,0 +1,79 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+
+import java.nio.file.Paths
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+task wrapper(type: Wrapper) {
+   gradleVersion = '2.9' //version required
+}
+
+def environmentSpecificDirectoryMap = ['dev' : 'devResources', 'qa' : 'qaResources', 'prod' : 'prodResources']
+
+def envProperty = hasProperty('env') ? getProperty('env') : 'dev'
+
+def envDir = environmentSpecificDirectoryMap[envProperty]
+
+
+sourceSets {
+    test {
+    	resources {
+    		srcDir "src/test/$envDir"
+    	}
+    }
+}
+
+def seleniumVersion = '2.53.1'
+
+dependencies {
+	testCompile "org.seleniumhq.selenium:selenium-server:${seleniumVersion}"
+	testCompile "org.seleniumhq.selenium:selenium-java:${seleniumVersion}"
+	testCompile "org.seleniumhq.selenium:selenium-firefox-driver:${seleniumVersion}"
+	testCompile "org.seleniumhq.selenium:selenium-remote-driver:${seleniumVersion}"
+	testCompile "org.testng:testng:6.9.10"
+	testCompile "org.apache.poi:poi:3.15"
+	testCompile "org.apache.poi:poi-ooxml:3.15"
+	testCompile "org.thymeleaf:thymeleaf:3.0.2.RELEASE"
+	testCompile "log4j:log4j:1.2.16"
+	testCompile "joda-time:joda-time:2.9.4"
+	testCompile "org.freemarker:freemarker:2.3.16"
+    testCompile "junit:junit:4.+"
+    testCompile "org.apache.commons:commons-lang3:3.5"
+    testCompile "com.google.code.gson:gson:2.8.0"
+}
+
+def formatDate() {
+	def format = "dd_MMM_yyyy_hh_mm_ss_a";
+	def formatter = DateTimeFormatter.ofPattern(format);
+	return LocalDateTime.now().format(formatter);
+}
+
+def createReportDirectory() {
+	def reportDirectory = Paths.get(file("$projectDir").getParent(), "Reports", formatDate()).toFile()
+	if (!reportDirectory.exists()) {
+		reportDirectory.mkdirs()
+	}
+	return reportDirectory.absolutePath
+}
+
+def reportDirectory = createReportDirectory()
+
+task print {
+	println "$reportDirectory"
+}
+
+test {
+	useTestNG() {
+		suites 'src/test/resources/testSuites/testNG.xml'
+		outputDirectory file("$reportDirectory")
+	}
+}
+

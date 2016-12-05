@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="AIMS_Automation_Parallel" parallel="tests" thread-count="5">
+	
+    <listeners>
+        <listener class-name="com.aims.listeners.CustomReporter" />
+        <listener class-name="com.aims.interceptors.TestCaseOrderInterceptor" />
+    </listeners>
+	<parameter name="controllerFileName" value="controller.xlsx" />
+	<parameter name="testDataFileName" value="testData.xlsx" />
+
+	<test name="alfresco">
+		<parameter name="moduleName" value="alfresco" />
+		<classes>
+			<class name="com.aims.ControllerFactory" />
+		</classes>
+	</test> 
+	
+	<test name="testing">
+		<parameter name="moduleName" value="testing" />
+		<classes>
+			<class name="com.aims.ControllerFactory" />
+		</classes>
+	</test> 
+	
+	<test name="testing2">
+		<parameter name="moduleName" value="testing2" />
+		<classes>
+			<class name="com.aims.ControllerFactory" />
+		</classes>
+	</test>
+	
+</suite>
